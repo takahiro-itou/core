@@ -34,6 +34,8 @@
 #include <docmodel/theme/Theme.hxx>
 #include <unotools/weakref.hxx>
 #include <basegfx/units/Length.hxx>
+#include <basegfx/units/Size2DLWrap.hxx>
+#include <basegfx/units/Range2DLWrap.hxx>
 #include <memory>
 #include <optional>
 #include <vector>
