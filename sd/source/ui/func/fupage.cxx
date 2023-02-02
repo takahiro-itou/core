@@ -234,7 +234,7 @@ const SfxItemSet* FuPage::ExecuteDialog(weld::Window* pParent, const SfxRequest&
     aNewAttr.Put( aPageItem );
 
     // size
-    maSize = mpPage->GetSize();
+    maSize = mpPage->getSize().toToolsSize();
     SvxSizeItem aSizeItem( SID_ATTR_PAGE_SIZE, maSize );
     aNewAttr.Put( aSizeItem );
 
@@ -246,10 +246,14 @@ const SfxItemSet* FuPage::ExecuteDialog(weld::Window* pParent, const SfxRequest&
     SvxPaperBinItem aPaperBinItem( SID_ATTR_PAGE_PAPERBIN, static_cast<sal_uInt8>(mpPage->GetPaperBin()) );
     aNewAttr.Put( aPaperBinItem );
 
-    SvxLRSpaceItem aLRSpaceItem( static_cast<sal_uInt16>(mpPage->GetLeftBorder()), static_cast<sal_uInt16>(mpPage->GetRightBorder()), 0, 0, mpDoc->GetPool().GetWhich(SID_ATTR_LRSPACE));
+    SvxLRSpaceItem aLRSpaceItem(sal_uInt16(mpPage->getBorder().leftUnit()),
+                                sal_uInt16(mpPage->getBorder().rightUnit()),
+                                0, 0, mpDoc->GetPool().GetWhich(SID_ATTR_LRSPACE));
     aNewAttr.Put( aLRSpaceItem );
 
-    SvxULSpaceItem aULSpaceItem( static_cast<sal_uInt16>(mpPage->GetUpperBorder()), static_cast<sal_uInt16>(mpPage->GetLowerBorder()), mpDoc->GetPool().GetWhich(SID_ATTR_ULSPACE));
+    SvxULSpaceItem aULSpaceItem(sal_uInt16(mpPage->getBorder().upperUnit()),
+                                sal_uInt16(mpPage->getBorder().lowerUnit()),
+                                mpDoc->GetPool().GetWhich(SID_ATTR_ULSPACE));
     aNewAttr.Put( aULSpaceItem );
 
     // Application
@@ -526,7 +530,7 @@ void FuPage::ApplyItemSet( const SfxItemSet* pArgs )
     {
         aNewSize = static_cast<const SvxSizeItem*>(pPoolItem)->GetSize();
 
-        if( mpPage->GetSize() != aNewSize )
+        if (mpPage->getSize().toToolsSize() != aNewSize)
             bSetPageSizeAndBorder = true;
     }
 
@@ -536,9 +540,11 @@ void FuPage::ApplyItemSet( const SfxItemSet* pArgs )
         nLeft = static_cast<const SvxLRSpaceItem*>(pPoolItem)->GetLeft();
         nRight = static_cast<const SvxLRSpaceItem*>(pPoolItem)->GetRight();
 
-        if( mpPage->GetLeftBorder() != nLeft || mpPage->GetRightBorder() != nRight )
+        if (mpPage->getBorder().leftUnit() != nLeft
+         || mpPage->getBorder().rightUnit() != nRight)
+        {
             bSetPageSizeAndBorder = true;
-
+        }
     }
 
     if( pArgs->GetItemState(mpDoc->GetPool().GetWhich(SID_ATTR_ULSPACE),
@@ -547,8 +553,11 @@ void FuPage::ApplyItemSet( const SfxItemSet* pArgs )
         nUpper = static_cast<const SvxULSpaceItem*>(pPoolItem)->GetUpper();
         nLower = static_cast<const SvxULSpaceItem*>(pPoolItem)->GetLower();
 
-        if( mpPage->GetUpperBorder() != nUpper || mpPage->GetLowerBorder() != nLower )
+        if (mpPage->getBorder().upperUnit() != nUpper
+         || mpPage->getBorder().lowerUnit() != nLower)
+        {
             bSetPageSizeAndBorder = true;
+        }
     }
 
     if( pArgs->GetItemState(mpDoc->GetPool().GetWhich(SID_ATTR_PAGE_EXT1), true, &pPoolItem) == SfxItemState::SET )
@@ -595,14 +604,14 @@ void FuPage::ApplyItemSet( const SfxItemSet* pArgs )
     if (nLeft == -1 && nUpper != -1)
     {
         bSetPageSizeAndBorder = true;
-        nLeft  = mpPage->GetLeftBorder();
-        nRight = mpPage->GetRightBorder();
+        nLeft  = mpPage->getBorder().leftUnit();
+        nRight = mpPage->getBorder().rightUnit();
     }
     else if (nLeft != -1 && nUpper == -1)
     {
         bSetPageSizeAndBorder = true;
-        nUpper = mpPage->GetUpperBorder();
-        nLower = mpPage->GetLowerBorder();
+        nUpper = mpPage->getBorder().upperUnit();
+        nLower = mpPage->getBorder().lowerUnit();
     }
 
     if( bSetPageSizeAndBorder || !mbMasterPage )
@@ -635,7 +644,7 @@ void FuPage::ApplyItemSet( const SfxItemSet* pArgs )
     }
 
     // Objects can not be bigger than ViewSize
-    Size aPageSize = mpDoc->GetSdPage(0, ePageKind)->GetSize();
+    Size aPageSize = mpDoc->GetSdPage(0, ePageKind)->getSize().toToolsSize();
     Size aViewSize(aPageSize.Width() * 3, aPageSize.Height() * 2);
     mpDoc->SetMaxObjSize(aViewSize);
 
