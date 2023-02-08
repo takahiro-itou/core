@@ -36,6 +36,20 @@ public:
         return Range2DLWrap(left, top, right, bottom, eUnit);
     }
 
+    static Range2DLWrap create(basegfx::B2DRange const& rRange2D,
+                               LengthUnit eUnit = LengthUnit::hmm)
+    {
+        if (rRange2D.isEmpty())
+            return Range2DLWrap(eUnit);
+
+        auto left = Length::from(eUnit, rRange2D.getMinX());
+        auto top = Length::from(eUnit, rRange2D.getMinY());
+        auto right = Length::from(eUnit, rRange2D.getMaxX());
+        auto bottom = Length::from(eUnit, rRange2D.getMaxY());
+
+        return Range2DLWrap(left, top, right, bottom, eUnit);
+    }
+
     Range2DLWrap(LengthUnit eUnit = LengthUnit::hmm)
         : Range2DL()
         , meUnit(eUnit)
@@ -61,8 +75,17 @@ public:
             auto top = getMinY().as(meUnit);
             auto right = getMaxX().as(meUnit);
             auto bottom = getMaxY().as(meUnit);
-            maRectangle = tools::Rectangle(basegfx::fround(left), basegfx::fround(top),
-                                           basegfx::fround(right), basegfx::fround(bottom));
+
+            if (left == right && top == bottom)
+            {
+                maRectangle = tools::Rectangle();
+                maRectangle.Move(basegfx::fround(left), basegfx::fround(top));
+            }
+            else
+            {
+                maRectangle = tools::Rectangle(basegfx::fround(left), basegfx::fround(top),
+                                               basegfx::fround(right), basegfx::fround(bottom));
+            }
         }
         return maRectangle;
     }

@@ -288,6 +288,22 @@ public:
             CPPUNIT_ASSERT_EQUAL(100_hmm, aRange.getMaxY());
             CPPUNIT_ASSERT_EQUAL(0_hmm, aRange.getWidth());
             CPPUNIT_ASSERT_EQUAL(0_hmm, aRange.getHeight());
+
+            auto aRectFromRange = aRange.toToolsRect();
+            CPPUNIT_ASSERT_EQUAL(tools::Long(100), aRectFromRange.Left());
+            CPPUNIT_ASSERT_EQUAL(tools::Long(100), aRectFromRange.Top());
+            CPPUNIT_ASSERT_EQUAL(tools::Long(100), aRectFromRange.Right());
+            CPPUNIT_ASSERT_EQUAL(tools::Long(100), aRectFromRange.Bottom());
+            CPPUNIT_ASSERT_EQUAL(tools::Long(0), aRectFromRange.GetWidth());
+            CPPUNIT_ASSERT_EQUAL(tools::Long(0), aRectFromRange.GetHeight());
+        }
+        {
+            basegfx::B2DRange aB2DRange(0.5, 0.5, 1.5, 1.5);
+            gfx::Range2DL aRange = gfx::Range2DLWrap::create(aB2DRange, gfx::LengthUnit::hmm);
+            CPPUNIT_ASSERT_EQUAL(180_emu, aRange.getMinX());
+            CPPUNIT_ASSERT_EQUAL(180_emu, aRange.getMinY());
+            CPPUNIT_ASSERT_EQUAL(540_emu, aRange.getMaxX());
+            CPPUNIT_ASSERT_EQUAL(540_emu, aRange.getMaxY());
         }
     }
 
