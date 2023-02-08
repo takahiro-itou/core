@@ -2428,24 +2428,22 @@ void SwDrawVirtObj::NbcSetAnchorPos(const Point& rPnt)
 
 const tools::Rectangle& SwDrawVirtObj::GetCurrentBoundRect() const
 {
-    if (m_aOutRect.IsEmpty())
-    {
+    if (isOutRectangleEmpty())
         const_cast<SwDrawVirtObj*>(this)->RecalcBoundRect();
-    }
 
-    return m_aOutRect;
+    return getOutRectangle();
 }
 
 const tools::Rectangle& SwDrawVirtObj::GetLastBoundRect() const
 {
-    return m_aOutRect;
+    return getOutRectangle();
 }
 
 Point SwDrawVirtObj::GetOffset() const
 {
     // do NOT use IsEmpty() here, there is already a useful offset
     // in the position
-    if (m_aOutRect == tools::Rectangle())
+    if (getOutRectangle() == tools::Rectangle())
     {
         return Point();
     }
