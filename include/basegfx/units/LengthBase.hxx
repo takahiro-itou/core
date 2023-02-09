@@ -160,13 +160,13 @@ public:
         return *this;
     }
 
-    constexpr LengthBase& operator*=(TYPE const& rhs)
+    template <typename INPUT> constexpr LengthBase& operator*=(INPUT const& rhs)
     {
         m_nValue *= rhs;
         return *this;
     }
 
-    constexpr LengthBase& operator/=(TYPE const& rhs)
+    template <typename INPUT> constexpr LengthBase& operator/=(INPUT const& rhs)
     {
         m_nValue /= rhs;
         return *this;
@@ -238,14 +238,16 @@ template <typename T> inline LengthBase<T> operator-(LengthBase<T> lhs, const Le
 
 /// Multiplication of a length unit with a scalar value.
 /// example 1cm * 2 = 2cm
-template <typename T> inline LengthBase<T> operator*(LengthBase<T> lhs, const long rhs)
+template <typename T, typename INPUT_TYPE>
+inline LengthBase<T> operator*(LengthBase<T> lhs, const INPUT_TYPE rhs)
 {
     return lhs *= rhs;
 }
 
 /// Division of a length unit with a scalar value.
 /// example 1cm / 2 = 0.5cm
-template <typename T> inline LengthBase<T> operator/(LengthBase<T> lhs, const long rhs)
+template <typename T, typename INPUT_TYPE>
+inline LengthBase<T> operator/(LengthBase<T> lhs, const INPUT_TYPE rhs)
 {
     return lhs /= rhs;
 }
