@@ -154,7 +154,7 @@ void SdrTextObj::NbcResize(const Point& rRef, const Fraction& xFact, const Fract
             aPol[3] = aPol0[2];
             aPol[4] = aPol0[1];
         }
-        Poly2Rect(aPol, aRectangle, maGeo);
+        aRectangle = svx::polygonToRectangle(aPol, maGeo);
         setRectangle(aRectangle);
     }
 
@@ -224,7 +224,8 @@ void SdrTextObj::NbcShear(const Point& rRef, Degree100 /*nAngle*/, double tn, bo
     for (sal_uInt16 i=0; i<nPointCount; i++) {
          ShearPoint(aPol[i],rRef,tn,bVShear);
     }
-    Poly2Rect(aPol, aRectangle, maGeo);
+    aRectangle = svx::polygonToRectangle(aPol, maGeo);
+
     ImpJustifyRect(aRectangle);
     setRectangle(aRectangle);
 
@@ -262,7 +263,8 @@ void SdrTextObj::NbcMirror(const Point& rRef1, const Point& rRef2)
     aPol[3]=aPol0[2];
     aPol[4]=aPol0[1];
 
-    Poly2Rect(aPol, aRectangle, maGeo);
+    aRectangle = svx::polygonToRectangle(aPol, maGeo);
+
     setRectangle(aRectangle);
 
     if (bRotate90) {
