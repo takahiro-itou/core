@@ -101,7 +101,7 @@ SdrTextObj::SdrTextObj(SdrModel& rSdrModel, SdrTextObj const & rSource)
     // #i25616#
     mbSupportTextIndentingOnLineWidthChange = true;
 
-    maRectangle = rSource.maRectangle;
+    maRectangleRange = rSource.maRectangleRange;
     maGeo = rSource.maGeo;
     maTextSize = rSource.maTextSize;
 
@@ -201,8 +201,6 @@ SdrTextObj::~SdrTextObj()
 
 void SdrTextObj::FitFrameToTextSize()
 {
-    ImpJustifyRect(maRectangle);
-
     SdrText* pText = getActiveText();
     if(pText==nullptr || !pText->GetOutlinerParaObject())
         return;
