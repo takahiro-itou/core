@@ -7,7 +7,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <test/unoapixml_test.hxx>
+#include <basegfx/units/Length.hxx>
 
 #include <com/sun/star/beans/XPropertySet.hpp>
 #include <com/sun/star/drawing/XDrawPagesSupplier.hpp>
@@ -24,6 +24,7 @@
 #include <svx/sdr/contact/displayinfo.hxx>
 #include <svx/sdr/contact/viewcontact.hxx>
 #include <svx/sdr/contact/viewobjectcontact.hxx>
+#include <svx/svdtrans.hxx>
 #include <svx/svdorect.hxx>
 #include <svx/unopage.hxx>
 #include <svx/svdview.hxx>
@@ -37,10 +38,10 @@
 
 #include <sdr/contact/objectcontactofobjlistpainter.hxx>
 
+#include <test/unoapixml_test.hxx>
+
 using namespace ::com::sun::star;
 
-namespace
-{
 /// Tests for svx/source/svdraw/ code.
 class SvdrawTest : public UnoApiXmlTest
 {
@@ -549,6 +550,68 @@ CPPUNIT_TEST_FIXTURE(SvdrawTest, testPageViewDrawLayerClip)
     // i.e. the 2nd page had a line shape from the first page's footer.
     CPPUNIT_ASSERT_EQUAL(2, pPage2->getObjectCount());
 }
+
+CPPUNIT_TEST_FIXTURE(SvdrawTest, testResizeRect)
+{
+    {
+        tools::Rectangle aRectangle(1, 1, 10, 10);
+        Point aReference(1, 1);
+        ResizeRect(aRectangle, aReference, Fraction(1, 2), Fraction(1, 2));
+
+        CPPUNIT_ASSERT_EQUAL(tools::Rectangle(1, 1, 6, 6), aRectangle);
+    }
+
+    {
+        tools::Rectangle aRectangle(1, 1, 10, 10);
+        Point aReference(10, 10);
+        ResizeRect(aRectangle, aReference, Fraction(1, 2), Fraction(1, 2));
+
+        CPPUNIT_ASSERT_EQUAL(tools::Rectangle(5, 5, 10, 10), aRectangle);
+    }
+
+    {
+        gfx::Range2DLWrap aRange(1_hmm, 1_hmm, 10_hmm, 10_hmm);
+        CPPUNIT_ASSERT_EQUAL(9_hmm, aRange.getWidth());
+        CPPUNIT_ASSERT_EQUAL(9_hmm, aRange.getHeight());
+
+        gfx::Tuple2DL aReference(1_hmm, 1_hmm);
+        svx::resizeRange(aRange, aReference, 0.5, 0.5);
+
+        CPPUNIT_ASSERT_EQUAL(false, aRange.isEmpty());
+
+        CPPUNIT_ASSERT_EQUAL(1_hmm, aRange.getMinX());
+        CPPUNIT_ASSERT_EQUAL(5.5_hmm, aRange.getMaxX());
+        CPPUNIT_ASSERT_EQUAL(1_hmm, aRange.getMinY());
+        CPPUNIT_ASSERT_EQUAL(5.5_hmm, aRange.getMaxY());
+
+        CPPUNIT_ASSERT_EQUAL(4.5_hmm, aRange.getWidth());
+        CPPUNIT_ASSERT_EQUAL(4.5_hmm, aRange.getHeight());
+
+        auto aRectangle = aRange.toToolsRect();
+        CPPUNIT_ASSERT_EQUAL(tools::Rectangle(1, 1, 6, 6), aRectangle);
+    }
+
+    {
+        gfx::Range2DLWrap aRange(1_hmm, 1_hmm, 10_hmm, 10_hmm);
+        CPPUNIT_ASSERT_EQUAL(9_hmm, aRange.getWidth());
+        CPPUNIT_ASSERT_EQUAL(9_hmm, aRange.getHeight());
+
+        gfx::Tuple2DL aReference(10_hmm, 10_hmm);
+        svx::resizeRange(aRange, aReference, 0.5, 0.5);
+
+        CPPUNIT_ASSERT_EQUAL(false, aRange.isEmpty());
+
+        CPPUNIT_ASSERT_EQUAL(5.5_hmm, aRange.getMinX());
+        CPPUNIT_ASSERT_EQUAL(10_hmm, aRange.getMaxX());
+        CPPUNIT_ASSERT_EQUAL(5.5_hmm, aRange.getMinY());
+        CPPUNIT_ASSERT_EQUAL(10_hmm, aRange.getMaxY());
+
+        CPPUNIT_ASSERT_EQUAL(4.5_hmm, aRange.getWidth());
+        CPPUNIT_ASSERT_EQUAL(4.5_hmm, aRange.getHeight());
+
+        auto aRectangle = aRange.toToolsRect();
+        CPPUNIT_ASSERT_EQUAL(tools::Rectangle(6, 6, 10, 10), aRectangle);
+    }
 }
 
 /* vim:set shiftwidth=4 softtabstop=4 expandtab: */
