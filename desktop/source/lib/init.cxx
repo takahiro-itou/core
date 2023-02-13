@@ -5540,8 +5540,6 @@ static void doc_resetSelection(LibreOfficeKitDocument* pThis)
 
 static char* getLanguages(LibreOfficeKitDocument* pThis, const char* pCommand)
 {
-    (void)pThis;
-
     css::uno::Sequence< css::lang::Locale > aLocales;
 
     if (xContext.is())
