@@ -6940,6 +6940,17 @@
         </constraints>
         <value>0</value>
       </prop>
+      <group oor:name="Presets">
+        <info>
+          <desc>Stores options under the "Presets" section.</desc>
+        </info>
+        <prop oor:name="Immediately" oor:type="xs:boolean" oor:nillable="false">
+          <info>
+            <desc>Option for run immediately.</desc>
+          </info>
+          <value>true</value>
+        </prop>
+      </group>
     </group>
   </component>
 </oor:component-schema>

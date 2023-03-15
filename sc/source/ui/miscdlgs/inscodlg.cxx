@@ -70,6 +70,9 @@ void ScInsertContentsDlg::storeFlagsInRegistry()
     else if(ScInsertContentsDlg::mxRbMoveRight->get_active())
         officecfg::Office::Common::PasteSpecial::ShiftCells::set(1, batch);
 
+    //Presets
+    officecfg::Office::Common::PasteSpecial::Presets::Immediately::set(ScInsertContentsDlg::mxImmediately->get_active(), batch);
+
     batch->commit();
 }
 
@@ -184,6 +187,14 @@ ScInsertContentsDlg::ScInsertContentsDlg(weld::Window* pParent,
             case 4:     nPreviousMoveMode = InsCellCmd::INS_NONE;
                         break;
         }
+
+        /*
+         * Flags for Presets
+         */
+        if(officecfg::Office::Common::PasteSpecial::Paste::All::get())
+            mxImmediately->set_active(true);
+        else
+            mxImmediately->set_active(false);
     }
 
     SetInsContentsCmdBits( ScInsertContentsDlg::nPreviousChecks );
