@@ -1541,7 +1541,7 @@ bool ScTabView::MoveCursorKeyInput( const KeyEvent& rKeyEvent )
         {
             case MOD_NONE:  MoveCursorPage( 0, static_cast<SCCOLROW>(nDX), SC_FOLLOW_FIX, bSel );  break;
             case MOD_ALT:   MoveCursorPage( nDX, 0, SC_FOLLOW_FIX, bSel );  break;
-            case MOD_CTRL:  SelectNextTab( nDX, false );                    break;
+            case MOD_CTRL:  SelectNextTab( nDX, false, false );             break;
             default:
             {
                 // added to avoid warnings
@@ -1825,7 +1825,7 @@ void ScTabView::MarkDataChanged()
     UpdateSelectionOverlay();
 }
 
-void ScTabView::SelectNextTab( short nDir, bool bExtendSelection )
+void ScTabView::SelectNextTab( short nDir, bool bExtendSelection, bool bCyclic )
 {
     if (!nDir)
         return;
@@ -1839,8 +1839,11 @@ void ScTabView::SelectNextTab( short nDir, bool bExtendSelection )
         do
         {
             --nNextTab;
-            if (nNextTab < 0)
+            if (nNextTab < 0) {
+                if (!bCyclic)
+                    break;
                 nNextTab = rDoc.GetTableCount();
+            }
             if (rDoc.IsVisible(nNextTab))
                 break;
         } while (nNextTab != nTab);
@@ -1851,8 +1854,11 @@ void ScTabView::SelectNextTab( short nDir, bool bExtendSelection )
         do
         {
             ++nNextTab;
-            if (nNextTab >= nCount)
+            if (nNextTab >= nCount) {
+                if (!bCyclic)
+                    break;
                 nNextTab = 0;
+            }
             if (rDoc.IsVisible(nNextTab))
                 break;
         } while (nNextTab != nTab);

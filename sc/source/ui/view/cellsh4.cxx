@@ -331,12 +331,12 @@ void ScCellShell::ExecuteMove( SfxRequest& rReq )
     {
         case SID_NEXT_TABLE:
         case SID_NEXT_TABLE_SEL:
-            pTabViewShell->SelectNextTab( 1, (nSlotId == SID_NEXT_TABLE_SEL) );
+            pTabViewShell->SelectNextTab( 1, (nSlotId == SID_NEXT_TABLE_SEL), false );
             break;
 
         case SID_PREV_TABLE:
         case SID_PREV_TABLE_SEL:
-            pTabViewShell->SelectNextTab( -1, (nSlotId == SID_PREV_TABLE_SEL) );
+            pTabViewShell->SelectNextTab( -1, (nSlotId == SID_PREV_TABLE_SEL), false );
             break;
 
         //  cursor movements in range do not originate from Basic,

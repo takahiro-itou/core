@@ -461,7 +461,7 @@ public:
     void            GetPageMoveEndPosition(SCCOL nMovX, SCROW nMovY, SCCOL& rPageX, SCROW& rPageY);
 
     SC_DLLPUBLIC void SetTabNo( SCTAB nTab, bool bNew = false, bool bExtendSelection = false, bool bSameTabButMoved = false );
-    void            SelectNextTab( short nDir, bool bExtendSelection );
+    void            SelectNextTab( short nDir, bool bExtendSelection, bool bCyclic );
     void            SelectTabPage( const sal_uInt16 nTab );
 
     void            ActivateView( bool bActivate, bool bFirst );
