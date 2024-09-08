@@ -580,6 +580,7 @@
           <menu:menuitem menu:id=".uno:JumpToTable"/>
           <menu:menuitem menu:id=".uno:JumpToPrevTable"/>
           <menu:menuitem menu:id=".uno:JumpToNextTable"/>
+          <menu:menuitem menu:id=".uno:ToggleCyclicJump"/>
         </menu:menupopup>
       </menu:menu>
       <menu:menuseparator/>
