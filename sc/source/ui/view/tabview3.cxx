@@ -1841,7 +1841,7 @@ void ScTabView::SelectNextTab( short nDir, bool bExtendSelection, bool bCyclic )
             --nNextTab;
             if (nNextTab < 0) {
                 if (!bCyclic)
-                    break;
+                    return;
                 nNextTab = rDoc.GetTableCount();
             }
             if (rDoc.IsVisible(nNextTab))
@@ -1856,7 +1856,7 @@ void ScTabView::SelectNextTab( short nDir, bool bExtendSelection, bool bCyclic )
             ++nNextTab;
             if (nNextTab >= nCount) {
                 if (!bCyclic)
-                    break;
+                    return;
                 nNextTab = 0;
             }
             if (rDoc.IsVisible(nNextTab))
